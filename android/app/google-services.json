@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "979399699873",
+    "project_id": "fir-concepts-c8079",
+    "storage_bucket": "fir-concepts-c8079.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979399699873:android:60aa35c1bc835fe555efe0",
+        "android_client_info": {
+          "package_name": "com.example.push_notifications"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7HTOO76nnvLOhm2XJWyriKIS1cH_mwoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
