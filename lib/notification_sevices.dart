@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:push_notifications/message_screen.dart';
 
 class NotificationSevices {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -38,14 +41,22 @@ class NotificationSevices {
         android: androidInitializationSettings, iOS: iosInitializationSettings);
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: (payload) {});
+        onDidReceiveNotificationResponse: (payload) {
+      handleMessage(context, message);
+    });
   }
 
-  void firebaseInit() async {
+  void firebaseInit(BuildContext context) async {
     FirebaseMessaging.onMessage.listen((message) {
       print(message.notification!.title.toString());
       print(message.notification!.body.toString());
-      showNotification(message);
+
+      if (Platform.isAndroid) {
+        initLocalNotification(context, message);
+        showNotification(message);
+      } else {
+        showNotification(message);
+      }
     });
   }
 
@@ -89,6 +100,26 @@ class NotificationSevices {
   isTokenRefresh() async {
     messaging.onTokenRefresh.listen((event) {
       event.toString();
+    });
+  }
+
+  void handleMessage(BuildContext context, RemoteMessage message) {
+    if (message.data['type'] == 'msg') {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MessageScreen()));
+    }
+  }
+
+  Future<void> setupInteractMessage(BuildContext context) async {
+    //when app is terminated
+    RemoteMessage? initalMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    if (initalMessage != null) {}
+    handleMessage(context, initalMessage!);
+
+    //when app is in background
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      handleMessage(context, event);
     });
   }
 }
